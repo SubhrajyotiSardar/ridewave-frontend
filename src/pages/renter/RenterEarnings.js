@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import { Card, CardBody, EmptyState, PageHeader, StatCard } from '../../components/ui';
+import { generateTransactionPDF } from '../../utils/pdfExport';
+import { Card, CardBody, EmptyState, PageHeader, StatCard, Button } from '../../components/ui';
 
 const renterMenu = (handleLogout) => [
   { section:'My Business', items:[
@@ -18,7 +20,7 @@ const renterMenu = (handleLogout) => [
 ];
 
 export default function RenterEarnings() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [earnings, setEarnings] = useState([]);
   const handleLogout = () => { logout(); navigate('/login'); };
@@ -32,9 +34,16 @@ export default function RenterEarnings() {
   const total = earnings.reduce((s,t)=>s+t.amount,0);
   const thisMonth = earnings.filter(t=>new Date(t.createdAt).getMonth()===new Date().getMonth()).reduce((s,t)=>s+t.amount,0);
 
+  const handleExportPDF = () => {
+    if (earnings.length === 0) return toast.error('No earnings to export yet');
+    generateTransactionPDF(earnings, user, null);
+    toast.success('Earnings statement downloaded!');
+  };
+
   return (
     <DashboardLayout menuItems={renterMenu(handleLogout)}>
-      <PageHeader title="Earnings" subtitle="Revenue from all completed bookings" />
+      <PageHeader title="Earnings" subtitle="Revenue from all completed bookings"
+        action={<Button variant="secondary" onClick={handleExportPDF}>📄 Download PDF</Button>} />
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'16px', marginBottom:'24px' }}>
         <StatCard icon="💰" value={`₹${total}`}     label="Total Earned"    bg="#D1FAE5" />
         <StatCard icon="📅" value={`₹${thisMonth}`} label="This Month"      bg="#DBEAFE" />

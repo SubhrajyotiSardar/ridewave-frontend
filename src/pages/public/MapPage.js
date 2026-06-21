@@ -126,9 +126,13 @@ export default function MapPage() {
       <Modal open={detailOpen} onClose={() => setDetailOpen(false)} title={selectedVehicle?.name || 'Vehicle'}>
         {selectedVehicle && (
           <>
-            <div style={{ background:'linear-gradient(135deg,#0F172A,#1E3A5F)', borderRadius:'10px', padding:'30px', textAlign:'center', fontSize:'80px', marginBottom:'16px' }}>
-              {typeEmoji[selectedVehicle.type] || '🚲'}
-            </div>
+            {selectedVehicle.images?.[0] ? (
+              <img src={selectedVehicle.images[0]} alt={selectedVehicle.name} style={{ width:'100%', height:'220px', objectFit:'cover', borderRadius:'10px', marginBottom:'16px' }} />
+            ) : (
+              <div style={{ background:'linear-gradient(135deg,#0F172A,#1E3A5F)', borderRadius:'10px', padding:'30px', textAlign:'center', fontSize:'80px', marginBottom:'16px' }}>
+                {typeEmoji[selectedVehicle.type] || '🚲'}
+              </div>
+            )}
             {[['Brand / Model',`${selectedVehicle.brand} ${selectedVehicle.model}`],['Type',selectedVehicle.type?.replace(/_/g,' ')],['Condition',selectedVehicle.condition],['Location',`📍 ${selectedVehicle.locationName}`],['Price/hr',`₹${selectedVehicle.pricePerHour}`],['Price/day',`₹${selectedVehicle.pricePerDay}`]].map(([l,v])=>(
               <div key={l} style={{ display:'flex', gap:'8px', marginBottom:'8px', fontSize:'14px', padding:'6px 0', borderBottom:'1px solid var(--border)' }}>
                 <span style={{ color:'var(--muted)', minWidth:'110px' }}>{l}</span>

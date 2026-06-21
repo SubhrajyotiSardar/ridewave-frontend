@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { TopupModal } from '../../components/payment/PaymentModal';
+import { generateTransactionPDF } from '../../utils/pdfExport';
 import { Button, Card, CardBody, PageHeader, EmptyState } from '../../components/ui';
 
 const txnMeta = { wallet_topup:['➕','#D1FAE5','credit','Wallet Top-up'], booking_payment:['🛵','#FEE2E2','debit','Booking Payment'], refund:['↩️','#DBEAFE','credit','Refund'], earning:['💰','#EDE9FE','credit','Earning'] };
@@ -14,6 +16,7 @@ export default function UserTransactions() {
   const [txns, setTxns] = useState([]);
   const [balance, setBalance] = useState(0);
   const [topupOpen, setTopupOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const handleLogout = () => { logout(); navigate('/login'); };
 
   const menu = [
@@ -35,10 +38,26 @@ export default function UserTransactions() {
     });
   }, []);
 
+  const handleExportPDF = () => {
+    if (txns.length === 0) return toast.error('No transactions to export yet');
+    setExporting(true);
+    try {
+      generateTransactionPDF(txns, user, balance);
+      toast.success('Statement downloaded!');
+    } catch (err) {
+      toast.error('Could not generate PDF');
+    } finally { setExporting(false); }
+  };
+
   return (
     <DashboardLayout menuItems={menu}>
       <PageHeader title="Transaction History" subtitle={`${txns.length} records · Balance: ₹${balance}`}
-        action={<Button variant="primary" onClick={()=>setTopupOpen(true)}>➕ Add Money</Button>} />
+        action={
+          <div style={{ display:'flex', gap:'10px' }}>
+            <Button variant="secondary" loading={exporting} onClick={handleExportPDF}>📄 Download PDF</Button>
+            <Button variant="primary" onClick={()=>setTopupOpen(true)}>➕ Add Money</Button>
+          </div>
+        } />
       <Card>
         <CardBody style={{ padding:'8px 16px' }}>
           {txns.length === 0 ? (

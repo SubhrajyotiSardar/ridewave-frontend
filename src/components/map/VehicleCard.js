@@ -9,13 +9,19 @@ export default function VehicleCard({ vehicle, onClick }) {
 
   return (
     <div onClick={onClick}
-      style={{ background:'var(--surface)', borderRadius:'var(--radius)', border:'1px solid var(--border)', boxShadow:'var(--shadow)', overflow:'hidden', cursor:'pointer', transition:'.2s' }}
-      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(0,0,0,.13)'; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow)'; }}>
+      style={{ background:'var(--surface)', borderRadius:'20px', border:'1px solid var(--border)', boxShadow:'var(--shadow)', overflow:'hidden', cursor:'pointer', transition:'all .3s ease' }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 16px 36px rgba(0,0,0,.14)'; e.currentTarget.querySelector('.veh-emoji').style.transform = 'scale(1.15) rotate(-4deg)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow)'; e.currentTarget.querySelector('.veh-emoji').style.transform = 'scale(1) rotate(0)'; }}>
 
       {/* Image area */}
-      <div style={{ background:'linear-gradient(135deg,#0F172A,#1E3A5F)', height:'150px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'72px', position:'relative' }}>
-        {typeEmoji[v.type] || '🚲'}
+      <div style={{
+        height:'150px', position:'relative',
+        background: v.images?.[0] ? `url(${v.images[0]}) center/cover no-repeat` : 'linear-gradient(135deg,#0F172A,#1E3A5F)',
+        display:'flex', alignItems:'center', justifyContent:'center', fontSize:'72px'
+      }}>
+        {!v.images?.[0] && (
+          <span className="veh-emoji" style={{ display:'inline-block', transition:'transform .3s ease' }}>{typeEmoji[v.type] || '🚲'}</span>
+        )}
         <div style={{ position:'absolute', top:'12px', right:'12px' }}>
           <Badge status={v.status} />
         </div>
@@ -27,7 +33,7 @@ export default function VehicleCard({ vehicle, onClick }) {
       </div>
 
       {/* Info */}
-      <div style={{ padding:'16px' }}>
+      <div style={{ padding:'20px' }}>
         <h3 style={{ fontSize:'15px', marginBottom:'3px' }}>{v.name}</h3>
         <p style={{ fontSize:'13px', color:'var(--muted)', marginBottom:'6px' }}>{v.model} · {v.brand}</p>
         <p style={{ fontSize:'12px', color:'var(--muted)', marginBottom:'8px' }}>📍 {v.locationName || '—'}</p>

@@ -24,7 +24,8 @@ export default function Navbar() {
   return (
     <nav style={{ background:'var(--brand)', padding:'0 24px', display:'flex', alignItems:'center', justifyContent:'space-between', height:'60px', position:'sticky', top:0, zIndex:1000, boxShadow:'0 1px 0 rgba(255,255,255,.06)' }}>
       {/* Logo */}
-      <Link to="/" style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'20px', fontWeight:'700', color:'#fff', letterSpacing:'-0.5px' }}>
+      <Link to="/" style={{ display:'flex', alignItems:'center', gap:'10px', fontFamily:'Space Grotesk,sans-serif', fontSize:'20px', fontWeight:'700', color:'#fff', letterSpacing:'-0.5px' }}>
+        <span style={{ width:'34px', height:'34px', borderRadius:'10px', background:'linear-gradient(135deg,var(--accent),#059669)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'17px', boxShadow:'0 4px 12px rgba(16,185,129,.35)' }}>🚲</span>
         Ride<span style={{ color:'var(--accent)' }}>Wave</span>
       </Link>
 

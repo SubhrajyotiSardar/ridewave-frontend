@@ -28,8 +28,6 @@ export default function Login() {
     } finally { setLoading(false); }
   };
 
-  const demoLogin = (em, pw) => { setEmail(em); setPassword(pw); };
-
   return (
     <div style={{ minHeight:'calc(100vh - 60px)', display:'flex', alignItems:'center', justifyContent:'center', background:'linear-gradient(135deg,#0F172A,#1E293B)', padding:'20px' }}>
       <div style={{ width:'100%', maxWidth:'420px' }}>
@@ -53,21 +51,7 @@ export default function Login() {
               </Button>
             </form>
 
-            <div style={{ borderTop:'1px solid var(--border)', marginTop:'24px', paddingTop:'20px' }}>
-              <p style={{ fontSize:'12px', color:'var(--muted)', marginBottom:'10px', fontWeight:'600', textTransform:'uppercase', letterSpacing:'.5px' }}>Quick Demo Login</p>
-              <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
-                {[['🛡️ Admin','admin@bikerental.com','Admin@123'],['🚴 Rider','arjun@user.com','User@123'],['🏪 Renter','rohit@renter.com','Renter@123']].map(([label,em,pw])=>(
-                  <button key={em} onClick={() => demoLogin(em, pw)}
-                    style={{ padding:'8px 14px', border:'1px solid var(--border)', borderRadius:'8px', background:'var(--light)', fontSize:'13px', cursor:'pointer', textAlign:'left', transition:'.2s', color:'var(--text)' }}
-                    onMouseEnter={e=>e.currentTarget.style.borderColor='var(--accent)'}
-                    onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border)'}>
-                    <strong>{label}</strong> — {em}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <p style={{ textAlign:'center', marginTop:'20px', fontSize:'14px', color:'var(--muted)' }}>
+            <p style={{ textAlign:'center', marginTop:'24px', fontSize:'14px', color:'var(--muted)' }}>
               Don't have an account?{' '}
               <Link to="/register" style={{ color:'var(--accent)', fontWeight:'500' }}>Register</Link>
             </p>
