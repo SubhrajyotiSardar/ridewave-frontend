@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import NotificationBell from './NotificationBell';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -40,6 +41,7 @@ export default function Navbar() {
             {user.role === 'user' && navLink('/dashboard', 'Dashboard')}
             {user.role === 'renter' && navLink('/renter', 'My Fleet')}
             {user.role === 'admin' && navLink('/admin', 'Admin')}
+            <NotificationBell />
             <div style={{ width:'1px', height:'20px', background:'rgba(255,255,255,.15)', margin:'0 6px' }}/>
             <span style={{ color:'#94A3B8', fontSize:'13px', marginRight:'4px' }}>Hi, {user.name.split(' ')[0]}</span>
             <button onClick={handleLogout}

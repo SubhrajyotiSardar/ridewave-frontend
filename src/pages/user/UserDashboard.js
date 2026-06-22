@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { StatCard, Button } from '../../components/ui';
 
 export default function UserDashboard() {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
   const handleLogout = () => { logout(); navigate('/login'); };
+
+  // Always pull fresh stats on entering the dashboard — totalRides/totalSpent
+  // change server-side after bookings/payments, so localStorage data goes stale.
+  useEffect(() => { refreshUser(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const menu = [
     { section:'My Account', items:[
