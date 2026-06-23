@@ -30,7 +30,7 @@ export default function UserDashboard() {
       <h2 style={{ marginBottom:'4px' }}>Welcome back, {user?.name} 👋</h2>
       <p style={{ color:'var(--muted)', marginBottom:'28px' }}>Here's your riding summary</p>
       <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'16px', marginBottom:'28px' }}>
-        <StatCard icon="🚲" value={user?.totalRides || 0}        label="Total Rides"     bg="#D1FAE5" />
+        <StatCard icon="🚲" value={user?.totalRides || 0}        label="Total Bookings"  bg="#D1FAE5" />
         <StatCard icon="💸" value={`₹${user?.totalSpent || 0}`}  label="Total Spent"     bg="#FEF3C7" />
         <StatCard icon="💰" value={`₹${user?.walletBalance || 0}`} label="Wallet Balance" bg="#DBEAFE" onClick={() => navigate('/dashboard/wallet')} />
       </div>
