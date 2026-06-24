@@ -29,3 +29,41 @@ input, select, textarea { font-family: 'Inter', sans-serif; }
 
 /* Leaflet override */
 .leaflet-container { border-radius: var(--radius); }
+
+/* Skeleton loading shimmer */
+@keyframes rw-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Mobile drawer backdrop fade-in */
+@keyframes rw-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsive grid helpers — collapse multi-column layouts on small screens.
+   Inline styles can't use @media, so these utility classes handle it. */
+.rw-stats-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.rw-steps-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+@media (max-width: 720px) {
+  .rw-stats-grid-3 { grid-template-columns: 1fr; gap: 14px; }
+  .rw-steps-grid-3 { grid-template-columns: 1fr; gap: 20px; }
+  .rw-steps-connector { display: none; }
+  .rw-dash-stats { grid-template-columns: 1fr 1fr !important; }
+}
+@media (max-width: 420px) {
+  .rw-dash-stats { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  .rw-hero-title { font-size: 34px !important; }
+  .rw-hero-sub { font-size: 15px !important; }
+}
