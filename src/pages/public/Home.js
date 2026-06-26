@@ -2,17 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import VehicleCard from '../../components/map/VehicleCard';
+import { SkeletonVehicleGrid } from '../../components/ui/Skeleton';
 
 export default function Home() {
   const navigate = useNavigate();
   const [vehicles, setVehicles] = useState([]);
+  const [availableCount, setAvailableCount] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/vehicles?status=available').then(r => setVehicles((r.data.vehicles || []).slice(0, 6))).catch(() => {});
+    api.get('/vehicles?status=available')
+      .then(r => {
+        const allAvailable = r.data.vehicles || [];
+        setAvailableCount(allAvailable.length); // real total, before slicing for display
+        setVehicles(allAvailable.slice(0, 6));   // only first 6 shown as "featured"
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const stats = [
-    { icon:'🚲', value:'50+',    label:'Vehicles Available', bg:'#D1FAE5' },
+    { icon:'🚲', value: availableCount === null ? '—' : availableCount, label:'Vehicles Available', bg:'#D1FAE5' },
     { icon:'📍', value:'8',      label:'Pickup Locations',   bg:'#DBEAFE' },
     { icon:'⚡', value:'₹50/hr', label:'Starting Price',     bg:'#FEF3C7' },
   ];
@@ -38,10 +48,10 @@ export default function Home() {
             Live in 8 locations across Kolkata
           </div>
 
-          <h1 style={{ fontSize:'56px', fontWeight:'700', letterSpacing:'-1.5px', marginBottom:'18px', lineHeight:1.08 }}>
+          <h1 className="rw-hero-title" style={{ fontSize:'56px', fontWeight:'700', letterSpacing:'-1.5px', marginBottom:'18px', lineHeight:1.08 }}>
             Find Your Perfect <span style={{ color:'var(--accent)' }}>Ride</span>
           </h1>
-          <p style={{ fontSize:'18px', color:'#94A3B8', maxWidth:'540px', margin:'0 auto 40px', lineHeight:1.6 }}>
+          <p className="rw-hero-sub" style={{ fontSize:'18px', color:'#94A3B8', maxWidth:'540px', margin:'0 auto 40px', lineHeight:1.6 }}>
             Rent bikes and scooters by the hour or day. Real-time availability, instant booking, secure payments — unlock and go.
           </p>
 
@@ -58,7 +68,7 @@ export default function Home() {
       <div style={{ maxWidth:'1200px', margin:'0 auto', padding:'0 24px 80px' }}>
 
         {/* ───────────── STATS ───────────── */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'20px', maxWidth:'780px', margin:'-56px auto 64px', position:'relative', zIndex:2 }}>
+        <div className="rw-stats-grid-3" style={{ maxWidth:'780px', margin:'-56px auto 64px', position:'relative', zIndex:2 }}>
           {stats.map((s, i) => <StatCardHover key={i} {...s} />)}
         </div>
 
@@ -67,7 +77,9 @@ export default function Home() {
           <PillButton onClick={() => navigate('/vehicles')}>View All →</PillButton>
         } />
 
-        {vehicles.length > 0 ? (
+        {loading ? (
+          <div style={{ marginBottom:'80px' }}><SkeletonVehicleGrid count={6} /></div>
+        ) : vehicles.length > 0 ? (
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'22px', marginBottom:'80px' }}>
             {vehicles.map(v => <VehicleCard key={v._id} vehicle={v} onClick={() => navigate('/map')} />)}
           </div>
@@ -82,9 +94,9 @@ export default function Home() {
         <SectionHeading eyebrow="Simple Process" title="How It Works" center
           subtitle="Three simple steps to start riding" />
 
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'28px', marginBottom:'80px', position:'relative' }}>
-          {/* Connecting line */}
-          <div style={{ position:'absolute', top:'46px', left:'16%', right:'16%', height:'2px', background:'repeating-linear-gradient(to right, var(--border) 0, var(--border) 8px, transparent 8px, transparent 16px)', zIndex:0 }} />
+        <div className="rw-steps-grid-3" style={{ marginBottom:'80px', position:'relative' }}>
+          {/* Connecting line — hidden on mobile via CSS since steps stack vertically there */}
+          <div className="rw-steps-connector" style={{ position:'absolute', top:'46px', left:'16%', right:'16%', height:'2px', background:'repeating-linear-gradient(to right, var(--border) 0, var(--border) 8px, transparent 8px, transparent 16px)', zIndex:0 }} />
           {steps.map((s, i) => <StepCard key={i} index={i + 1} {...s} />)}
         </div>
 
